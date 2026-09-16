@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is Master Admin (Tal Eliyahoo)
+    function isMasterAdmin() {
+      return request.auth != null && (
+        request.auth.token.email == 'tal.eliyahoo31@gmail.com' ||
+        request.auth.token.email == 'Tal.eliyahoo31@gmail.com'
+      );
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Businesses collection
+    match /businesses/{businessId} {
+      allow read, write: if true;
+    }
+
+    // Clients collection - isolated per business
+    match /clients/{clientId} {
+      allow read, write: if true;
+    }
+
+    // Appointments collection - linked to business and client
+    match /appointments/{appointmentId} {
+      allow read, write: if true;
+    }
+
+    // Invoices collection - financial isolation
+    match /invoices/{invoiceId} {
+      allow read, write: if true;
+    }
+
+    // Shared Documents collection - portal access
+    match /documents/{documentId} {
+      allow read, write: if true;
+    }
+
+    // Real-time Chat Messages - secure communication
+    match /messages/{messageId} {
+      allow read, write: if true;
+    }
+
+    // System Audit Logs - master security trail
+    match /auditLogs/{logId} {
+      allow read, write: if true;
+    }
+
+    match /tasks/{taskId} {
+      allow read, write: if true;
+    }
+
+    match /custom_roles/{roleId} {
+      allow read, write: if true;
+    }
+
+    match /employees/{employeeId} {
+      allow read, write: if true;
+    }
+
+    match /email_campaigns/{campaignId} {
+      allow read, write: if true;
+    }
+
+    match /subscription_billings/{billingId} {
+      allow read, write: if true;
+    }
+
+    // Fallback collection matcher
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

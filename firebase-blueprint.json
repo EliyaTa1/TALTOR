@@ -1,0 +1,166 @@
+{
+  "entities": {
+    "Business": {
+      "title": "Business",
+      "description": "A registered business on the TALTOR platform paying a monthly subscription",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "ownerEmail": { "type": "string" },
+        "phone": { "type": "string" },
+        "category": { "type": "string" },
+        "plan": { "type": "string", "enum": ["BASIC", "PRO", "ULTIMATE"] },
+        "monthlyFee": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "suspended", "trial"] },
+        "createdAt": { "type": "string" },
+        "brandColor": { "type": "string" },
+        "customPortalMessage": { "type": "string" }
+      },
+      "required": ["id", "name", "ownerName", "plan", "status"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "An end-client managed by a specific business",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "businessId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "status": { "type": "string", "enum": ["lead", "contacted", "proposal", "active", "inactive"] },
+        "dealValue": { "type": "number" },
+        "tags": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "portalAccessPin": { "type": "string" },
+        "vipStatus": { "type": "boolean" },
+        "churnRisk": { "type": "string", "enum": ["low", "medium", "high"] },
+        "satisfactionScore": { "type": "number" },
+        "lastContactDate": { "type": "string" }
+      },
+      "required": ["id", "businessId", "name", "phone", "status"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A CRM task or reminder for a customer or employee",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "businessId": { "type": "string" },
+        "clientId": { "type": "string" },
+        "clientName": { "type": "string" },
+        "assignedEmployeeId": { "type": "string" },
+        "assignedEmployeeName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string" },
+        "dueTime": { "type": "string" },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "status": { "type": "string", "enum": ["pending", "in_progress", "completed"] },
+        "createdAt": { "type": "string" },
+        "completedAt": { "type": "string" }
+      },
+      "required": ["id", "businessId", "title", "dueDate", "status"]
+    },
+    "CustomRole": {
+      "title": "CustomRole",
+      "description": "A custom role defined by a business owner with specific permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "businessId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "permissions": { "type": "object" },
+        "isSystemDefault": { "type": "boolean" }
+      },
+      "required": ["id", "businessId", "name", "permissions"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "An employee belonging to a business with an assigned custom role",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "businessId": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "roleId": { "type": "string" },
+        "roleName": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] }
+      },
+      "required": ["id", "businessId", "name", "email", "roleId"]
+    },
+    "EmailCampaign": {
+      "title": "EmailCampaign",
+      "description": "An email marketing campaign sent via Mailchimp or SendGrid",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "businessId": { "type": "string" },
+        "title": { "type": "string" },
+        "subject": { "type": "string" },
+        "content": { "type": "string" },
+        "segment": { "type": "string" },
+        "recipientCount": { "type": "number" },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "sent"] },
+        "sentAt": { "type": "string" },
+        "openRate": { "type": "number" },
+        "clickRate": { "type": "number" }
+      },
+      "required": ["id", "businessId", "title", "subject", "status"]
+    },
+    "SubscriptionBilling": {
+      "title": "SubscriptionBilling",
+      "description": "Master subscription billing charge and payment method for a business",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "businessId": { "type": "string" },
+        "businessName": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "plan": { "type": "string" },
+        "amount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "cardLast4": { "type": "string" },
+        "status": { "type": "string", "enum": ["paid", "pending", "overdue", "failed"] },
+        "nextBillingDate": { "type": "string" },
+        "lastPaymentDate": { "type": "string" }
+      },
+      "required": ["id", "businessId", "amount", "status"]
+    }
+  },
+  "firestore": {
+    "/businesses/{businessId}": {
+      "schema": { "$ref": "#/entities/Business" },
+      "description": "Stores registered businesses on TALTOR"
+    },
+    "/clients/{clientId}": {
+      "schema": { "$ref": "#/entities/Client" },
+      "description": "Stores client records scoped to a business"
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "Stores customer-related tasks and reminders"
+    },
+    "/custom_roles/{roleId}": {
+      "schema": { "$ref": "#/entities/CustomRole" },
+      "description": "Stores custom roles defined by business owners"
+    },
+    "/employees/{employeeId}": {
+      "schema": { "$ref": "#/entities/Employee" },
+      "description": "Stores staff employees assigned to roles"
+    },
+    "/email_campaigns/{campaignId}": {
+      "schema": { "$ref": "#/entities/EmailCampaign" },
+      "description": "Stores email marketing campaigns and telemetry stats"
+    },
+    "/subscription_billings/{billingId}": {
+      "schema": { "$ref": "#/entities/SubscriptionBilling" },
+      "description": "Stores business subscription fees and payment settlement for Master"
+    }
+  }
+}

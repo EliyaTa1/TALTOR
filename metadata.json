@@ -1,0 +1,6 @@
+{
+  "name": "TALTOR",
+  "description": "מערכת ניהול לקוחות מתקדמת רב-שכבתית (BASIC, PRO, ULTIMATE) עם דשבורד אנליטי חכם, פורטל לקוחות ייעודי וניהול מאסטר מקיף",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
